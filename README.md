@@ -1,3 +1,4 @@
+# **Almond-GPT**
 Almond-GPT is an end-to-end, educational GPT project built entirely from scratch using PyTorch.
 The goal of this project is to deeply understand how a GPT-style language model works — from tokenization and training a decoder-only transformer, all the way to serving and monitoring the model as a real system.
 
