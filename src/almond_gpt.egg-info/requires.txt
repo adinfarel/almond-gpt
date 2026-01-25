@@ -1,0 +1,14 @@
+torch
+numpy
+tqdm
+pyyaml
+fastapi
+uvicorn
+pydantic
+python-multipart
+mlflow
+dvc
+prometheus-client
+pytest
+black
+python-dotenv

@@ -1,0 +1,5 @@
+vocab_size: 768
+paths:
+  text_path: data/raw/input.txt
+  vocab_output: models/tokenizer/vocab.json
+  merges_output: models/tokenizer/merges.json

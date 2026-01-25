@@ -1,0 +1,24 @@
+# ----- CORE MODELS -----
+torch
+numpy
+tqdm
+pyyaml
+
+# ----- SERVING & BACKEND -----
+fastapi
+uvicorn
+pydantic
+python-multipart
+
+# ----- EXPERIMENT TRACKING, DATA VERSIONING, AND MONITORING -----
+mlflow
+dvc
+prometheus-client
+
+# ----- UTILITIES -----
+pytest
+black
+python-dotenv
+
+# ----- LOCAL PACKAGE INSTALLATION -----
+-e .

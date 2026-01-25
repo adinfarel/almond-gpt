@@ -1,0 +1,20 @@
+Metadata-Version: 2.4
+Name: almond-gpt
+Version: 0.0.1
+Author: Adin Ramdan Farelino
+Requires-Dist: torch
+Requires-Dist: numpy
+Requires-Dist: tqdm
+Requires-Dist: pyyaml
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Requires-Dist: pydantic
+Requires-Dist: python-multipart
+Requires-Dist: mlflow
+Requires-Dist: dvc
+Requires-Dist: prometheus-client
+Requires-Dist: pytest
+Requires-Dist: black
+Requires-Dist: python-dotenv
+Dynamic: author
+Dynamic: requires-dist

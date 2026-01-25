@@ -1,0 +1,20 @@
+training:
+  vocab_size: int = 768
+  block_size: int = 64
+  n_layers: int = 4
+  n_heads: int = 4
+  n_embd: int = 256
+  dropout: float = 0.1
+  device: str = "cuda" if torch.cuda.is_available() else "cpu"
+  learning_rate: float = 3e-4
+  batch_size: int = 16
+  training: bool = True
+
+eval:
+  max_iters: int = 5000
+  eval_interval: int = 500
+  eval_iters: int = 200
+
+path:
+  text_bin_path: data/processed/processed_data.bin
+  model_save_path: models/checkpoints/gpt_model.pt
