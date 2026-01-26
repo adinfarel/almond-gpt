@@ -41,7 +41,7 @@ def eval_loss(model, data, config: GPTConfig):
     for _ in range(config.eval_iters):
         xb, yb = get_batch(data, config.batch_size, config.block_size)
         xb, yb = xb.to(config.device), yb.to(config.device)
-        logits, loss = model(xb)
+        logits, loss = model(xb, yb)
         losses.append(loss.item())
     model.train()
     return sum(losses) / len(losses)
@@ -138,31 +138,32 @@ class AlmondGPTModel(nn.Module):
     def __init__(self):
         super().__init__()
         self.config = GPTConfig.from_yaml("configs/models_config.yaml")
-        self.embeddings_table = nn.Embedding(self.config.vocab_size, self.config.n_embd)
-        self.positional_embeddings = nn.Embedding(self.config.block_size, self.config.n_embd)
+        self.token_emb = nn.Embedding(self.config.vocab_size, self.config.n_embd)
+        self.pos_emb = nn.Embedding(self.config.block_size, self.config.n_embd)
         self.blocks = nn.Sequential(
             *[Block(self.config.n_embd, self.config.n_heads, self.config.dropout, self.config.block_size) for _ in range(self.config.n_layers)]
         )
-        self.ln_norm = nn.LayerNorm(self.config.n_embd)
-        self.ln_head = nn.Linear(self.config.n_embd, self.config.vocab_size)
+        self.ln_f = nn.LayerNorm(self.config.n_embd)
+        self.lm_head = nn.Linear(self.config.n_embd, self.config.vocab_size)
     
 
     def forward(self, x, targets=None):
         B, T = x.shape # batch size, time steps
         # token embeddings and positional embeddings
-        token_embeddings = self.embeddings_table(x) # (B, T, n_embd)
-        position_embeddings = self.positional_embeddings(torch.arange(T, device=self.config.device)) # (T, n_embd)
+        token_embeddings = self.token_emb(x) # (B, T, n_embd)
+        position_embeddings = self.pos_emb(torch.arange(T, device=self.config.device)) # (T, n_embd)
         x = token_embeddings + position_embeddings # (B, T, n_embd)
         x = self.blocks(x) # (B, T, n_embd)
-        x = self.ln_norm(x) # (B, T, n_embd)
-        logits = self.ln_head(x) # (B, T, vocab_size)
+        x = self.ln_f(x) # (B, T, n_embd)
+        logits = self.lm_head(x) # (B, T, vocab_size)
         
         if targets is None:
-            return logits
-        
-        B, T, C = logits.shape
-        logits = logits.view(-1, C)
-        loss = F.cross_entropy(logits, targets.view(-1))
+            loss = None
+        else:
+            B, T, C = logits.shape
+            logits = logits.view(-1, C)
+            loss = F.cross_entropy(logits, targets.view(-1))
+            
         return logits, loss
     
     def generate(self, idx, max_new_tokens):
@@ -176,7 +177,7 @@ class AlmondGPTModel(nn.Module):
             # Crop idx to the last block_size tokens
             idx_cond = idx[:, -self.config.block_size:]
             # Get the logits for the current context
-            logits = self.forward(idx_cond) # (B, T, vocab_size)
+            logits, _ = self.forward(idx_cond) # (B, T, vocab_size)
             # Focus on the last time step
             logits = logits[:, -1, :] # (B, vocab_size)
             # Apply softmax to get probabilities

@@ -1,19 +1,19 @@
 training:
-  vocab_size: int = 768
-  block_size: int = 64
-  n_layers: int = 4
-  n_heads: int = 4
-  n_embd: int = 256
-  dropout: float = 0.1
-  device: str = "cuda" if torch.cuda.is_available() else "cpu"
-  learning_rate: float = 3e-4
-  batch_size: int = 16
-  training: bool = True
+  vocab_size: 8192
+  block_size: 128
+  n_layers: 8
+  n_heads: 12
+  n_embd: 768
+  dropout: 0.1
+  device: "cpu"
+  learning_rate: 0.0003
+  batch_size: 64
+  training: true
 
 eval:
-  max_iters: int = 5000
-  eval_interval: int = 500
-  eval_iters: int = 200
+  max_iters: 5000
+  eval_interval: 500
+  eval_iters: 200
 
 path:
   text_bin_path: data/processed/processed_data.bin

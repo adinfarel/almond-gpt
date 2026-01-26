@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from utils.common import load_yaml
+import torch
 
 @dataclass
 class GPTConfig:
@@ -25,6 +26,7 @@ class GPTConfig:
     @classmethod
     def from_yaml(cls, path: str):
         config = load_yaml(path)
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
         return cls(
             vocab_size=config['training']['vocab_size'],
             block_size=config['training']['block_size'],
@@ -32,7 +34,7 @@ class GPTConfig:
             n_heads=config['training']['n_heads'],
             n_embd=config['training']['n_embd'],
             dropout=config['training']['dropout'],
-            device=config['training']['device'],
+            device=device,
             text_bin_path=config['path']['text_bin_path'],
             model_save_path=config['path']['model_save_path'],
             training=config['training']['training'],

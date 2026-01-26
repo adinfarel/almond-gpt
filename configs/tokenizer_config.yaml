@@ -1,4 +1,4 @@
-vocab_size: 768
+vocab_size: 8192
 paths:
   text_path: data/raw/input.txt
   vocab_output: models/tokenizer/vocab.json

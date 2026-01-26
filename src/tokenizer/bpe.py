@@ -52,9 +52,9 @@ class AlmondTokenizer(nn.Module):
         ids = list(text.encode('utf-8'))
         while len(ids) >= 2:
             stats = self.get_stats(ids)
-            if stats not in self.merges:
+            best_pair = min(stats, key=lambda pair: self.merges.get(pair, float('inf')))
+            if best_pair not in self.merges:
                 break
-            best_pair = min(stats, key=stats.get)
             ids = self.merge_pair(best_pair, ids, self.merges[best_pair])
         logging.info(f"Encoded text to IDs: {ids} successfully.")
         return ids

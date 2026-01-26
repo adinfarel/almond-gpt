@@ -6,6 +6,7 @@ from utils.exception import CustomException
 from utils.common import save_bin
 from tokenizer.bpe import AlmondTokenizer
 from data.dataset import DatasetConfig
+from tqdm import tqdm
 # ----------------------------------
 
 def prepare_dataset():
@@ -37,14 +38,23 @@ def prepare_dataset():
     
     # Tokenize data
     try:
-        token_ids = tokenizer.encode(text)
+        lines = text.splitlines()
+        all_tokens_ids = []
+        logging.info(f"Tokenizing {len(lines)} lines of text...")
+        for line in tqdm(lines, desc="Processing text to token IDs..."):
+            token_ids = tokenizer.encode(line)
+            all_tokens_ids.extend(token_ids)
         logging.info("Data tokenization completed successfully.")
     except Exception as e:
         raise CustomException(e, sys)
     
     # Save processed data
     try:
-        save_bin(token_ids, dataset_config.processed_data_path)
+        save_bin(all_tokens_ids, dataset_config.processed_data_path)
         logging.info(f"Processed data saved at {dataset_config.processed_data_path} successfully.")
+        return dataset_config.processed_data_path
     except Exception as e:
         raise CustomException(e, sys)
+
+if __name__ == "__main__":
+    print("Successfully")

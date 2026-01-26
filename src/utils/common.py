@@ -99,6 +99,8 @@ def save_bin(data: np.ndarray, file_path: str) -> None:
         if not os.path.exists(os.path.dirname(file_path)):
             os.makedirs(os.path.dirname(file_path), exist_ok=True)
             logging.info(f"Created directory for binary file at {os.path.dirname(file_path)}")
+        if isinstance(data, list):
+            data = np.array(data, dtype=np.uint16)
         data.tofile(file_path)
         logging.info(f"Binary file saved successfully at {file_path}")
     except Exception as e:
